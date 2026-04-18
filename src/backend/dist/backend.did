@@ -1,0 +1,118 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = record {name: text;};
+type UserId = principal;
+type UpdateDocumentNameRequest = 
+ record {
+   id: DocumentId;
+   name: text;
+ };
+type Timestamp = int;
+type RotatePageRequest = 
+ record {
+   documentId: DocumentId;
+   pageId: PageId;
+   rotation: PageRotation;
+ };
+type ReorderPagesRequest = 
+ record {
+   documentId: DocumentId;
+   pageIds: vec PageId;
+ };
+type PageRotation = 
+ variant {
+   deg0;
+   deg180;
+   deg270;
+   deg90;
+ };
+type PageInput = 
+ record {
+   "blob": ExternalBlob;
+   ocrText: opt text;
+   rotation: PageRotation;
+ };
+type PageId = nat;
+type Page = 
+ record {
+   "blob": ExternalBlob;
+   id: PageId;
+   ocrText: opt text;
+   rotation: PageRotation;
+ };
+type ExternalBlob = blob;
+type DocumentSummary = 
+ record {
+   createdAt: Timestamp;
+   id: DocumentId;
+   name: text;
+   pageCount: nat;
+   updatedAt: Timestamp;
+ };
+type DocumentId = nat;
+type Document = 
+ record {
+   createdAt: Timestamp;
+   id: DocumentId;
+   name: text;
+   owner: UserId;
+   pages: vec Page;
+   updatedAt: Timestamp;
+ };
+type CreateDocumentRequest = 
+ record {
+   name: text;
+   pages: vec PageInput;
+ };
+type AddPageRequest = 
+ record {
+   documentId: DocumentId;
+   insertAtIndex: opt nat;
+   page: PageInput;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addPage: (req: AddPageRequest) -> (PageId);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createDocument: (req: CreateDocumentRequest) -> (Document);
+  deleteDocument: (docId: DocumentId) -> ();
+  deletePage: (docId: DocumentId, pageId: PageId) -> ();
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getDocument: (docId: DocumentId) -> (opt Document) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  listDocuments: () -> (vec DocumentSummary) query;
+  reorderPages: (req: ReorderPagesRequest) -> ();
+  rotatePage: (req: RotatePageRequest) -> ();
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  saveOcrText: (docId: DocumentId, pageId: PageId, ocrText: text) -> ();
+  searchDocuments: (searchTerm: text) -> (vec DocumentSummary) query;
+  updateDocumentName: (req: UpdateDocumentNameRequest) -> ();
+}

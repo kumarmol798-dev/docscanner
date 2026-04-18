@@ -1,0 +1,58 @@
+// Version: 1.0.0
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DocumentId__446996092 = Nat;
+type DocumentInternal__568865967 =
+  {
+    createdAt : Timestamp__301639476;
+    id : DocumentId__446996092;
+    name : Text;
+    owner : UserId__158757552;
+    pages : [PageInternal__740229334];
+    updatedAt : Timestamp__301639476
+  };
+type ExternalBlob__246066408 = Blob;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PageId__1000135420 = Nat;
+type PageInternal__740229334 =
+  {
+    blob : ExternalBlob__246066408;
+    id : PageId__1000135420;
+    ocrText : ?Text;
+    rotation : PageRotation__773302551
+  };
+type PageRotation__773302551 = {#deg0; #deg180; #deg270; #deg90};
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+type UserProfile__446616884 = {name : Text};
+type UserRole__1054455867 = {#admin; #guest; #user};
+actor {
+  stable var _nextDocId : Nat;
+  stable var _nextPageId : Nat;
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable docs :
+    {
+      var root :
+        Node__46230540<DocumentId__446996092, DocumentInternal__568865967>;
+      var size : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__446616884>;
+      var size : Nat__490723111
+    }
+};

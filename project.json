@@ -1,0 +1,24 @@
+{
+  "overview": "A web-based document scanner app that captures documents via device camera, applies auto-cropping and image enhancement, extracts text via OCR, and exports as PDF or image. Users manage a personal library of scanned documents with search and download functionality.",
+  "features": [
+    "Live camera capture with edge detection and document framing",
+    "Auto-crop and perspective correction",
+    "Image enhancement filters (B&W, color, greyscale)",
+    "OCR text extraction with copy-to-clipboard",
+    "Multi-page document assembly and reordering",
+    "Export as PDF or image (JPEG/PNG)",
+    "Persistent personal document library with search",
+    "User authentication via Internet Identity",
+    "File storage via object-storage extension"
+  ],
+  "category": "productivity",
+  "tags": [
+    "document-scanner",
+    "ocr",
+    "pdf",
+    "camera",
+    "productivity",
+    "file-management"
+  ],
+  "last_updated": "2026-04-18T07:22:27.107Z"
+}
